@@ -19,7 +19,13 @@
     };
   };
 
-  home.file.".config/fastfetch".source = ./config/fastfetch;
+  # home.file.".config/fastfetch".source = ./config/fastfetch;
+
+  xdg.configFile."fastfetch" = {
+    source = config.lib.file.mkOutOfStoreSymlink "/home/photon/.config/nixsail/config/fastfetch";
+    recursive = true;
+  };
+
   home.packages = with pkgs; [
     gcc
   ];
