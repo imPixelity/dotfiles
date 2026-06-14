@@ -9,20 +9,34 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }: {
-    nixosConfigurations.sail = nixpkgs.lib.nixosSystem {
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }:
+    let
       system = "x86_64-linux";
-      modules = [
-        ./configuration.nix
-	home-manager.nixosModules.home-manager {
-	  home-manager = {
-	    useGlobalPkgs = true;
-	    useUserPackages = true;
-	    users.photon = import ./home.nix;
-	    backupFileExtension = "backup";
-	  };
-	}
-      ];
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      formatter.${system} = pkgs.nixfmt-tree;
+
+      nixosConfigurations.sail = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.photon = import ./home.nix;
+              backupFileExtension = "backup";
+            };
+          }
+        ];
+      };
     };
-  };
 }
