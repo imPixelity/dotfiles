@@ -1,5 +1,11 @@
 { config, pkgs, ... }:
-
+let
+  dotfiles = "${config.home.homeDirectory}/.config/nixsail/config";
+  create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
+  configs = {
+    fastfetch = "fastfetch";
+  };
+in
 {
   home.username = "photon";
   home.homeDirectory = "/home/photon";
@@ -21,10 +27,18 @@
 
   # home.file.".config/fastfetch".source = ./config/fastfetch;
 
-  xdg.configFile."fastfetch" = {
-    source = config.lib.file.mkOutOfStoreSymlink "/home/photon/.config/nixsail/config/fastfetch";
+  /*
+    xdg.configFile."fastfetch" = {
+      # source = config.lib.file.mkOutOfStoreSymlink "/home/photon/.config/nixsail/config/fastfetch";
+      source = create_symlink "${dotfiles}/fastfetch";
+      recursive = true;
+    };
+  */
+
+  xdg.configFile = builtins.mapAttrs (name: subpath: {
+    source = create_symlink "${dotfiles}/${subpath}";
     recursive = true;
-  };
+  }) configs;
 
   home.packages = with pkgs; [
     gcc
