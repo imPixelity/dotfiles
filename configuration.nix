@@ -67,6 +67,8 @@
     "flakes"
   ];
 
+  environment.variables.EDITOR = "vim";
+
   environment.systemPackages = with pkgs; [
     vim
     wget

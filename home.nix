@@ -15,6 +15,7 @@
     enable = true;
     shellAliases = {
       ff = "fastfetch";
+      gg = "cd /home/photon/.config/nixsail";
     };
   };
 
