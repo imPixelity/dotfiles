@@ -20,15 +20,30 @@
 
   users.users.photon = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    description = "my user";
+    extraGroups = [
+      "wheel"
+      "networkManager"
+    ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwxH01Zdjfsi47PzAOIepxMOLbiYZRY53VcHeJn7ge7 photon@sail"
+    ];
     packages = with pkgs; [
       tree
     ];
   };
 
-  programs.firefox.enable = true;
   programs.niri.enable = true;
-  programs.waybar.enable = true;
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      X11Forwarding = true;
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+    };
+    openFirewall = true;
+  };
 
   services.greetd = {
     enable = true;
@@ -64,6 +79,8 @@
     mako
     swayidle
     fastfetch
+    noctalia-shell
+    sqlite
   ];
 
   system.stateVersion = "26.05";

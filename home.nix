@@ -1,11 +1,4 @@
 { config, pkgs, ... }:
-let
-  dotfiles = "${config.home.homeDirectory}/.config/nixsail/config";
-  create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
-  configs = {
-    fastfetch = "fastfetch";
-  };
-in
 {
   home.username = "photon";
   home.homeDirectory = "/home/photon";
@@ -25,20 +18,28 @@ in
     };
   };
 
-  # home.file.".config/fastfetch".source = ./config/fastfetch;
+  programs.vim = {
+    enable = true;
+    extraConfig = ''
+      set tabstop=2
+      set shiftwidth=2
+      set softtabstop=2
+      set expandtab
+    '';
+  };
 
-  /*
-    xdg.configFile."fastfetch" = {
-      # source = config.lib.file.mkOutOfStoreSymlink "/home/photon/.config/nixsail/config/fastfetch";
-      source = create_symlink "${dotfiles}/fastfetch";
-      recursive = true;
-    };
-  */
+  programs.firefox.enable = true;
+  programs.waybar.enable = true;
 
-  xdg.configFile = builtins.mapAttrs (name: subpath: {
-    source = create_symlink "${dotfiles}/${subpath}";
+  xdg.configFile."fastfetch" = {
+    source = config.lib.file.mkOutOfStoreSymlink /home/photon/.config/nixsail/config/fastfetch;
     recursive = true;
-  }) configs;
+  };
+
+  xdg.configFile."niri" = {
+    source = config.lib.file.mkOutOfStoreSymlink /home/photon/.config/nixsail/config/niri;
+    recursive = true;
+  };
 
   home.packages = with pkgs; [
     gcc
