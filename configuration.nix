@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -83,6 +84,8 @@
     fastfetch
     noctalia-shell
     sqlite
+    helix
+    # inputs.helix.packages."${pkgs.stdenv.hostPlatform.system}".helix
   ];
 
   system.stateVersion = "26.05";
